@@ -1,6 +1,6 @@
 # Pytorch CenterNet Detect
 
-本项目是对https://github.com/zzzxxxttt/pytorch_simple_CenterNet_45 项目的重构，感谢原作者的辛苦劳动! 具体改动请参见：    
+本项目是对https://github.com/zzzxxxttt/pytorch_simple_CenterNet_45 项目的重构，感谢原作者的辛苦劳动! 具体改动请参见：https://blog.csdn.net/qq_36810544/article/details/116568582
  
 ## Requirements:
 - python>=3.5
