@@ -21,6 +21,7 @@ def get_args(**kwargs):
     cfg = kwargs
     parser = argparse.ArgumentParser(description='simple_centernet45')
 
+    parser.add_argument('--local_rank', type=int, default=0)
     parser.add_argument('--root_dir', type=str, default='./')
     parser.add_argument('--data_dir', type=str, default='./data')
     parser.add_argument('--log_name', type=str, default='test')
@@ -59,8 +60,7 @@ def train():
     print('Setting up data...')
     train_dataset = KneeDataset(cfg.train_label, cfg)
     train_loader = torch.utils.data.DataLoader(train_dataset,
-                                               batch_size=cfg.batch_size
-                                               if cfg.dist else cfg.batch_size,
+                                               batch_size=cfg.batch_size,
                                                shuffle=not cfg.dist,
                                                num_workers=cfg.num_workers,
                                                pin_memory=True,
