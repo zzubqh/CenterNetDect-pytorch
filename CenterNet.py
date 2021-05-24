@@ -14,6 +14,7 @@ import torch
 import torch.optim as optim
 
 from nets.hourglass import get_hourglass
+from nets.resnet import get_pose_net
 
 from utils.utils import _tranpose_and_gather_feature, load_model
 from tools.tv_reference.coco_utils import convert_to_coco_api
@@ -26,7 +27,10 @@ from utils.post_process import ctdet_decode
 class CenterNet(object):
     def __init__(self, cfg):
         self.cfg = cfg
-        self.model = get_hourglass(cfg.arch, num_classes=cfg.num_classes)
+        if cfg.arch == 'resnet50':
+            self.model = get_pose_net(50, 64, cfg.num_classes)
+        else:
+            self.model = get_hourglass(cfg.arch, num_classes=cfg.num_classes)
 
         if cfg.pretrained_weights is not None:
             weight_file = os.path.join(cfg.save_folder, cfg.pretrained_weights)
@@ -94,7 +98,11 @@ class CenterNet(object):
         coco = convert_to_coco_api(data_loader.dataset, bbox_fmt='coco')
         coco_evaluator = CocoEvaluator(coco, iou_types=["bbox"], bbox_fmt='coco')
 
-        eval_net = get_hourglass(self.cfg.arch, num_classes=self.cfg.num_classes, is_training=False)
+       if self.cfg.arch == 'resnet50':
+            eval_net = get_pose_net(50, 64, self.cfg.num_classes)
+        else:
+            eval_net = get_hourglass(self.cfg.arch, num_classes=self.cfg.num_classes, is_training=False)
+            
         if self.cfg.num_gpu > 1 and torch.cuda.is_available():
             eval_net = torch.nn.DataParallel(eval_net).cuda()
         else:
